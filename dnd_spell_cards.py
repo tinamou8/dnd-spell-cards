@@ -29,23 +29,21 @@ def abbreviate_class(name: str) -> str:
 
 def bold_paragraph_lead(text: str) -> str:
     """
-    Bolds leading label-like sentences at the start of a paragraph, 
+    Bolds leading label-like sentences at the start of a paragraph or bullet item, 
     such as 'Combate.', 'Conexión telepática.', or 'Un solo familiar.'.
     Matches 1 to 5 words followed by a dot, as long as it's not a common abbreviation.
     """
-    # Exclude common non-heading prefixes if needed (e.g. 'Por último.')
-    pattern = r"^((?:[A-ZÁÉÍÓÚÑ][\w\-\']*(?:\s+[\w\-\']+){0,4})\.)\s+"
-    
-    # Optional list of phrases you don't want bolded even if they match
+    pattern = r"^(\s*(?:[•\-*]\s*)?)((?:[A-ZÁÉÍÓÚÑ][\w\-\']*(?:\s+[\w\-\']+){0,4})\.)\s+"
     skip_leads = {"Por último."}
     
     match = re.match(pattern, text)
     if match:
-        lead = match.group(1)
+        bullet_prefix = match.group(1)
+        lead = match.group(2)
         if lead not in skip_leads:
             rest = text[match.end():]
-            return f"<strong>{lead}</strong> {rest}"
-    return text
+            return f"{html.escape(bullet_prefix)}<strong>{html.escape(lead)}</strong> {html.escape(rest)}"
+    return html.escape(text)
 
 
 def extract_level_and_school(spell: dict) -> tuple[str, str, str]:
@@ -240,9 +238,10 @@ def build_card_html(spell: dict, card_title: str | None = None) -> str:
             paragraphs.append(f'<p class="higher-levels">{line_clean.removeprefix("__HIGHER__")}</p>')
         elif line_clean.startswith(("•", "-", "*")):
             flush_sentences()
-            paragraphs.append(f'<p class="bullet-item">{html.escape(line_clean)}</p>')
+            bullet_html = bold_paragraph_lead(line_clean)
+            paragraphs.append(f'<p class="bullet-item">{bullet_html}</p>')
         else:
-            current_p_sentences.append(html.escape(line_clean))
+            current_p_sentences.append(line_clean)
 
     flush_sentences()
 
