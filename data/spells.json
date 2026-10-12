@@ -1,0 +1,275 @@
+[
+  {
+    "name": "Agarre electrizante",
+    "level": "Cantrip",
+    "school": "Evocación",
+    "casting_time": "1 acción",
+    "range_area": "Toque",
+    "components": [
+      "V",
+      "S"
+    ],
+    "duration": "Instantáneo",
+    "concentration": false,
+    "ritual": false,
+    "attack_save": "Cuerpo a cuerpo",
+    "damage_effect": "Relámpago",
+    "tags": [
+      "Mago",
+      "hechicero"
+    ],
+    "source": {
+      "text": "PHB: 239",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14846-agarre-electrizante"
+    },
+    "description": "Una descarga eléctrica surge de tu mano hacia una criatura que intentas tocar. Haz un ataque de conjuro cuerpo a cuerpo contra el objetivo. Si acierta, el objetivo recibirá 1d8 de daño de relámpago y no podrá realizar ataques de oportunidad hasta el principio de su siguiente turno.",
+    "higher_level": "El daño aumenta en 1d8 cuando alcanzas los niveles 5 (2d8), 11 (3d8) y 17 (4d8)."
+  },
+  {
+    "name": "Descarga de fuego",
+    "level": "Cantrip",
+    "school": "Evocación",
+    "casting_time": "1 acción",
+    "range_area": "36 metros",
+    "components": [
+      "V",
+      "S"
+    ],
+    "duration": "Instantáneo",
+    "concentration": false,
+    "ritual": false,
+    "attack_save": "A distancia",
+    "damage_effect": "Fuego",
+    "tags": [
+      "Mago",
+      "hechicero"
+    ],
+    "source": {
+      "text": "PHB: 268",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14861-descarga-de-fuegoa"
+    },
+    "description": "Arrojas una mota de fuego a una criatura u objeto dentro del alcance. Haz un ataque de conjuro a distancia contra el objetivo. Si acierta, el objetivo recibe 1d10 de daño de fuego. Los objetos inflamables a los que acierte el conjuro empezarán a arder si nadie los lleva o viste.",
+    "higher_level": "El daño aumenta en 1d10 cuando alcanzas los niveles 5 (2d10), nivel 11 (3d10) y nivel 17 (4d10)."
+  },
+  {
+    "name": "Encantar animal",
+    "level": "1",
+    "school": "encantamiento",
+    "casting_time": "1 acción",
+    "range_area": "9 metros",
+    "components": [
+      "V",
+      "S",
+      "M"
+    ],
+    "material": "un trozo de comida",
+    "duration": "24 horas",
+    "attack_save": "Sabiduría niega",
+    "description": "Haces objetivo a una bestia que puedas ver dentro del alcance. El objetivo deberá superar una tirada de salvación de Sabiduría o tendrá el estado de Hechizado hasta que termine el conjuro. Si alguno de tus aliados o tú dañáis al objetivo, el conjuro termina.",
+    "higher_level": "Puedes hacer objetivo a una bestia adicional por cada nivel por encima de 1 que tenga el espacio.",
+    "tags": [
+      "bardo",
+      "druida",
+      "explorador"
+    ],
+    "source": {
+      "text": "PHB: 275",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14869-encantar-animal"
+    }
+  },
+  {
+    "name": "Crear llama",
+    "level": "Cantrip",
+    "school": "conjuración",
+    "casting_time": "1 acción adicional",
+    "range_area": "Personal",
+    "components": [
+      "V",
+      "S"
+    ],
+    "material": "",
+    "duration": "10 minutos",
+    "attack_save": "A distancia",
+    "damage_effect": "1d8 fuego",
+    "description": "En tu mano aparece una llama titilante, que permanece hasta que termine el conjuro. En tu mano, la llama no genera calor, no puede quemar nada y emite una luz brillante en un radio de 6 metros y luz tenue 6 metros más allá. El conjuro termina si lo vuelves a lanzar.\nHasta que el conjuro termine, puedes usar una acción de magia para arrojar la llama a una criatura u objeto a 18 metros o menos de ti. Haz un ataque de conjuro a distancia. Si acierta, el objetivo recibe 1d8 de daño de fuego.",
+    "higher_level": "El daño aumenta en 1d8 cuando alcanzas los niveles 5 (2d8), 11 (3d8) y 17 (4d8).",
+    "tags": [
+      "druida"
+    ],
+    "source": {
+      "text": "PHB: 266",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14850-crear-llama"
+    }
+  },
+  {
+    "name": "Saber druídico",
+    "level": "Cantrip",
+    "school": "transmutación",
+    "casting_time": "1 acción",
+    "range_area": "9 metros",
+    "components": [
+      "V",
+      "S"
+    ],
+    "material": "",
+    "duration": "Instantáneo",
+    "description": "Susurras a los espíritus de la naturaleza y produces uno de los siguientes efectos dentro del alcance.\n• Sensor climático. Creas un efecto sensorial Diminuto e inofensivo que predice el clima que habrá en tu ubicación durante las siguientes 24 horas. El efecto se manifiesta como un orbe dorado para los cielos despejados, una nube para la lluvia, copos de nieve para la nieve, etc. Este efecto persiste durante 1 asalto.\n• Florecer. Haces que, al instante, una flor florezca, una vaina de semillas se abra o el brote de una hoja germine.\n• Efecto sensorial. Creas un efecto sensorial inofensivo, como hojas cayendo, hadas espectrales bailando, una suave brisa, el sonido de un animal o un leve olor a mofeta. El efecto debe caber en un cubo de 1.5 metros de lado.\n• Jugar con fuego. Enciendes o apagas una vela, una antorcha o una hoguera.",
+    "higher_level": "",
+    "tags": [
+      "druida"
+    ],
+    "source": {
+      "text": "PHB: 330",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14845-saber-druidico"
+    }
+  },
+  {
+    "name": "Mano de mago",
+    "level": "Cantrip",
+    "school": "conjuración",
+    "casting_time": "1 acción",
+    "range_area": "9 metros",
+    "components": [
+      "V",
+      "S"
+    ],
+    "material": "",
+    "duration": "1 minuto",
+    "description": "Conjuras una mano espectral flotante en un punto de tu elección dentro del alcance. La mano dura hasta que el conjuro termine. Además, desaparecerá si en algún momento está a más de 9 metros de ti o si vuelves a lanzar este conjuro.\nCuando lances este conjuro, puedes utilizar la mano para manipular un objeto, abrir una puerta o un recipiente que no estén cerrados con llave, sacar un objeto de un recipiente abierto o guardarlo en él o verter el contenido de un vial.\nComo acción de magia en tus siguientes turnos, puedes volver a controlar la mano de esta forma. Como parte de la acción, puedes mover la mano hasta 9 metros. La mano no puede atacar, activar objetos mágicos ni llevar más de 5 kg de peso.",
+    "higher_level": "",
+    "tags": [
+      "bardo",
+      "brujo",
+      "hechicero",
+      "mago"
+    ],
+    "source": {
+      "text": "PHB: 308",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14857-mano-de-mago"
+    }
+  },
+  {
+    "name": "Disfrazarse",
+    "level": "1",
+    "school": "ilusionismo",
+    "casting_time": "1 acción",
+    "range_area": "Personal",
+    "components": [
+      "V",
+      "S"
+    ],
+    "material": "",
+    "duration": "1 hora",
+    "description": "Haces que tu aspecto (incluyendo tu vestimenta, armadura, armas y otras posesiones que lleves contigo) parezca diferente hasta que el conjuro termine. Puedes aparentar tener una altura 30 cm mayor o menor y una complexión más pesada o ligera. Debes adoptar una forma que tenga la misma configuración de miembros que tú. Por lo demás, la ilusión puede modificar todo lo que quieras de tu aspecto.\nLos cambios realizados por este conjuro pueden descubrirse mediante una inspección física. Por ejemplo, si usas este conjuro para añadir un sombrero a tu vestimenta, los objetos atravesarán el sombrero y cualquiera que lo toque no sentirá nada.\nPara darse cuenta de que te has disfrazado, una criatura debe emplear la acción de estudiar para inspeccionar tu apariencia y superar una prueba de Inteligencia (Investigación) contra tu CD de salvación de conjuros.",
+    "higher_level": "",
+    "tags": [
+      "bardo",
+      "hechicero",
+      "mago"
+    ],
+    "source": {
+      "text": "PHB: 272",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14881-disfrazarse"
+    }
+  },
+  {
+    "name": "Rociada venenosa",
+    "level": "Cantrip",
+    "school": "Nigromancia",
+    "casting_time": "1 acción",
+    "range_area": "9 metros",
+    "components": [
+      "V",
+      "S"
+    ],
+    "duration": "Instantáneo",
+    "concentration": false,
+    "ritual": false,
+    "attack_save": "A distancia",
+    "damage_effect": "1d12 veneno",
+    "tags": [
+      "Brujo",
+      "Druida",
+      "Hechicero",
+      "Mago"
+    ],
+    "description": "Rocías a una criatura dentro del alcance con una niebla tóxica. Haz un ataque de conjuro a distancia contra el objetivo. Si acierta, el objetivo recibe 1d12 de daño de veneno.",
+    "higher_level": "El daño aumenta en 1d12 cuando alcanzas los niveles 5 (2d12), 11 (3d12) y 17 (4d12).",
+    "source": {
+      "text": "PHB: 330",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14864-rociada-venenosa"
+    },
+    "icon": "https://nivel20.com/images/4361/small-82d76da29276f1e492486a791898d2b19353d2f6.png?1698311921"
+  },
+  {
+    "name": "Encontrar familiar",
+    "level": "1",
+    "school": "Conjuración",
+    "casting_time": "1 hora",
+    "range_area": "3 metros",
+    "components": [
+      "V",
+      "S",
+      "M"
+    ],
+    "material": "incienso para quemar que valga al menos 10 po, que se consume como parte del conjuro",
+    "duration": "Instantáneo",
+    "concentration": false,
+    "ritual": true,
+    "source": {
+      "text": "PHB: 276",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14883-encontrar-familiar"
+    },
+    "tags": [
+      "Mago"
+    ],
+    "description": "Obtienes los servicios de un familiar, un espíritu que adopta una forma animal de tu elección: araña, búho, comadreja, cuervo, gato, halcón, lagarto, murciélago, pulpo, rana, rata u otra bestia con un valor de desafío de 0. El familiar, que aparecerá en un espacio sin ocupar dentro del alcance, tiene el perfil de la forma elegida (consulta el apéndice B), aunque es un celestial, un feérico o un infernal (a tu elección) en vez de una bestia. Tu familiar actúa con independencia de ti, pero obedece tus órdenes.\nConexión telepática. Mientras tu familiar esté a 30 metros o menos de ti, puedes comunicarte con él telepáticamente. Además, como acción adicional, puedes ver a través de sus ojos y escuchar lo que oiga hasta el principio de tu siguiente turno, y también obtienes los beneficios de cualquier sentido especial que tenga.\nPor último, cuando lances un conjuro con un alcance de toque, puedes hacer que tu familiar sea quien toque al objetivo. Tu familiar debe estar a 30 metros o menos de ti y debe usar una reacción para tocar al objetivo cuando lances el conjuro.\nCombate. El familiar se considera un aliado para tus aliados y para ti, tira su propia iniciativa y actúa en su propio turno. Un familiar no puede atacar, pero puede realizar otras acciones de manera normal.\nDesaparición del familiar. Si los puntos de golpe del familiar se reducen a 0, desaparecerá y reaparecerá después de que vuelvas a lanzar este conjuro. Como acción de magia, puedes hacer que el familiar se retire temporalmente a una dimensión de bolsillo. Como alternativa, puedes hacer que se desvanezca para siempre. Como acción de magia mientras esté desaparecido temporalmente, puedes hacer que reaparezca en un espacio sin ocupar a 9 metros o menos de ti. Siempre que sus puntos de golpe se reduzcan a 0 o que el familiar se retire a la dimensión de bolsillo, dejará en el espacio que ocupaba cualquier cosa que vistiera o llevase.\nUn solo familiar. No puedes tener más de un familiar al mismo tiempo. Si lanzas este conjuro mientras tengas un familiar, harás que adopte una nueva forma que cumpla los requisitos."
+  },
+  {
+    "name": "Arma mágica",
+    "level": "2",
+    "school": "transmutación",
+    "casting_time": "1 acción adicional",
+    "range_area": "Toque",
+    "components": [
+      "V",
+      "S"
+    ],
+    "duration": "1 hora",
+    "description": "Tocas un arma no mágica. Hasta que el conjuro termine, esa arma se convierte en un arma mágica con un bonificador de +1 a las tiradas de ataque y de daño. El conjuro termina antes si lo vuelves a lanzar.",
+    "higher_level": "El bonificador aumenta a +2 si utilizas un espacio de niveles 3 a 5. El bonificador aumenta a +3 si utilizas un espacio de nivel 6 o superior.",
+    "tags": [
+      "explorador",
+      "hechicero",
+      "mago",
+      "paladín"
+    ],
+    "source": {
+      "text": "PHB: 245",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14922-arma-magica"
+    }
+  },
+  {
+    "name": "Purificar comida y bebida",
+    "level": "1",
+    "school": "transmutación",
+    "ritual": true,
+    "casting_time": "1 acción",
+    "range_area": "3 metros (Esfera de 1.5 metros)",
+    "components": [
+      "V",
+      "S"
+    ],
+    "duration": "Instantáneo",
+    "description": "Eliminas el veneno y la podredumbre de la comida y bebida no mágicas en una esfera de 1.5 metros de radio centrada en un punto dentro del alcance.",
+    "tags": [
+      "clérigo",
+      "druida",
+      "paladín"
+    ],
+    "source": {
+      "text": "PHB: 324",
+      "href": "https://nivel20.com/games/dnd-2024/spells/14907-purificar-comida-y-bebida"
+    }
+  }
+]

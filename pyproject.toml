@@ -1,0 +1,13 @@
+[project]
+name = "dnd-spell-cards"
+version = "0.1.0"
+description = "Generate printable MTG-sized A4 sheets of D&D 5e spell cards from a JSON dataset."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "playwright>=1.63.0",
+    "jsonschema>=4.26.0",
+]
+
+[tool.uv]
+package = false

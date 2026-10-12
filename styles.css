@@ -1,0 +1,409 @@
+@page {
+    size: A4 portrait;
+    margin: 6mm;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #555;
+    font-family: "Georgia", "Times New Roman", serif;
+    color: #1a1a1a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* 3x3 Card Grid for A4 sheets */
+.sheet {
+    display: grid;
+    grid-template-columns: repeat(3, 63.5mm);
+    grid-template-rows: repeat(3, 88mm);
+    gap: 1.5mm;
+    justify-content: center;
+    align-content: center;
+    width: 210mm;
+    min-height: 297mm;
+    margin: auto;
+    padding: 6mm 0;
+    background: #fff;
+    page-break-after: always;
+    break-after: page;
+}
+
+/* Card Container & Parchment Background */
+.card {
+    width: 63.5mm;
+    height: 88mm;
+    background-color: #f7edd7;
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.45) 0%, rgba(215,195,155,0.2) 100%),
+        linear-gradient(#fdf7ea, #eedec0);
+    border: 1px solid #3d2b1f;
+    border-radius: 4.5mm;
+    padding: 2.8mm;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid rgba(80, 50, 20, 0.35);
+    border-radius: 2.5mm;
+    padding: 2mm 2.5mm 1.2mm 2.5mm;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Header Layout: Square Icon | Center Title | Hexagon Level */
+.card-header {
+    display: grid;
+    grid-template-columns: 24px 1fr 24px;
+    align-items: center;
+    border-bottom: 1.2px solid #5a1e12;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    min-height: 28px;
+}
+
+.header-icon-box {
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-icon-placeholder {
+    width: 100%;
+    height: 100%;
+    border: 0.8px dashed #8c7355;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+/* Continuation Card Header (Cards 2+) */
+.card-header.header-continuation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 18px;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+}
+
+.header-continuation .card-title {
+    font-size: 7.8pt;
+    text-align: left;
+    padding: 0;
+}
+
+.header-continuation .hexagon-box {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.header-continuation .hex-svg {
+    width: 18px;
+    height: 18px;
+}
+
+.header-continuation .hex-text {
+    font-size: 9.5px;
+}
+
+.card-title {
+    font-family: "Cinzel", "Georgia", "Palatino", serif;
+    font-size: 9.5pt;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    color: #2c0b05;
+    line-height: 1.05;
+    text-align: center;
+    padding: 0 4px;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* Hexagon box using vector SVG */
+.hexagon-box {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.hex-svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Default color version */
+.hex-polygon {
+    fill: #5a1e12;
+    stroke: none;
+}
+
+.hex-text {
+    fill: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+}
+
+.ritual-badge {
+    position: absolute;
+    top: -4px;
+    right: -5px;
+    width: 13px;
+    height: 13px;
+    background-color: #d96209;
+    color: #ffffff;
+    border: 1.2px solid #ffffff;
+    border-radius: 50%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 8px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.45);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.header-continuation .ritual-badge {
+    top: -4px;
+    right: -4px;
+    width: 11px;
+    height: 11px;
+    font-size: 7px;
+    border-width: 1px;
+}
+
+body.printable .ritual-badge {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #000000;
+}
+
+/* Metadata Grid */
+.meta-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    row-gap: 2px;
+    column-gap: 4px;
+    margin-bottom: 3px;
+    border-bottom: 0.6px solid #8c7355;
+    padding-bottom: 3px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.meta-fullwidth {
+    grid-column: 1 / -1;
+}
+
+.meta-label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 4.6pt;
+    font-weight: 800;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+    color: #2b1d0c;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.meta-value {
+    font-size: 6pt;
+    line-height: 1.15;
+    color: #111;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Material Components */
+.materials {
+    font-size: 5.2pt;
+    font-style: italic;
+    color: #3b3026;
+    line-height: 1.15;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+    border-bottom: 0.5px dashed #a58e72;
+}
+
+/* Description Text */
+.card-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    font-size: 5.9pt;
+    line-height: 1.25;
+    text-align: left;
+    color: #1a1510;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card-body p {
+    margin: 0;
+}
+
+.card-body p.bullet-item {
+    margin: 0;
+    padding-left: 1.4mm !important;
+    text-indent: -1.4mm !important;
+    text-align: left;
+}
+
+.higher-levels {
+    margin-top: 1px;
+}
+
+/* Footer Section */
+.card-footer {
+    margin-top: auto;
+    padding-top: 2px;
+    border-top: 0.8px solid #5a1e12;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    font-size: 6pt;
+    font-weight: bold;
+    color: #2c0b05;
+}
+
+/* Compact Footer for Continuation Cards */
+.card-footer.footer-continuation {
+    padding-top: 1px;
+    padding-bottom: 0;
+    margin-bottom: -0.5mm;
+    border-top: 0.5px solid rgba(90, 30, 18, 0.7);
+    font-size: 5.2pt;
+    gap: 3px;
+}
+
+.footer-classes {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 65%;
+}
+
+.footer-type {
+    white-space: nowrap;
+}
+
+/* Printable Mode (Ink-saver) */
+body.printable .card {
+    background: #ffffff !important;
+    border: 1px solid #111111;
+}
+
+body.printable .card-inner {
+    background: #ffffff !important;
+    border: 0.5px solid #222222;
+}
+
+body.printable .card-title,
+body.printable .card-footer {
+    color: #000000;
+}
+
+body.printable .card-header,
+body.printable .card-footer {
+    border-color: #111111;
+}
+
+body.printable .meta-grid {
+    border-bottom-color: #333333;
+}
+
+body.printable .meta-label {
+    color: #000000;
+}
+
+body.printable .hex-polygon {
+    fill: #ffffff;
+    stroke: #111111;
+    stroke-width: 1.5;
+}
+
+body.printable .hex-text {
+    fill: #000000;
+}
+
+body.printable .header-icon-placeholder {
+    border-color: #555555;
+}
+
+.card-source {
+    position: absolute;
+    bottom: 0.6mm;
+    left: 5.5mm;
+    font-size: 4.6pt;
+    font-family: inherit;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: #5a1e12;
+    opacity: 0.8;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* Dynamic Font Scaling for short spells */
+.card-body.text-large {
+    font-size: 8.5pt;
+    line-height: 1.35;
+    justify-content: center;
+}
+
+.card-body.text-medium {
+    font-size: 7pt;
+    line-height: 1.3;
+    justify-content: center;
+}
+
+@media print {
+    body {
+        background: none;
+    }
+    .sheet {
+        margin: 0;
+        padding: 0;
+        width: auto;
+        min-height: auto;
+    }
+    .card-source {
+        color: #000000;
+        opacity: 1;
+    }
+}
