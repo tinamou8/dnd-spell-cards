@@ -3,8 +3,11 @@ import html
 import json
 import re
 from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
+from core.exporter import export_pdf
+from core.paginator import CHECK_OVERFLOW_JS, can_pack_into_k_cards, paginate_cards, render_preview_document
 
 CLASS_ABBREVIATIONS: dict[str, str] = {
     "bárbaro": "BÁR",
@@ -29,19 +32,19 @@ def abbreviate_class(name: str) -> str:
 
 def bold_paragraph_lead(text: str) -> str:
     """
-    Bolds leading label-like sentences at the start of a paragraph or bullet item, 
+    Bolds leading label-like sentences at the start of a paragraph or bullet item,
     such as 'Combate.', 'Conexión telepática.', or 'Un solo familiar.'.
     Matches 1 to 5 words followed by a dot, as long as it's not a common abbreviation.
     """
     pattern = r"^(\s*(?:[•\-*]\s*)?)((?:[A-ZÁÉÍÓÚÑ][\w\-\']*(?:\s+[\w\-\']+){0,4})\.)\s+"
     skip_leads = {"Por último."}
-    
+
     match = re.match(pattern, text)
     if match:
         bullet_prefix = match.group(1)
         lead = match.group(2)
         if lead not in skip_leads:
-            rest = text[match.end():]
+            rest = text[match.end() :]
             return f"{html.escape(bullet_prefix)}<strong>{html.escape(lead)}</strong> {html.escape(rest)}"
     return html.escape(text)
 
@@ -156,11 +159,7 @@ def build_card_html(spell: dict, card_title: str | None = None) -> str:
         </div>
         """
 
-    materials_html = (
-        f'<div class="materials">{html.escape(materials)}</div>'
-        if materials
-        else ""
-    )
+    materials_html = f'<div class="materials">{html.escape(materials)}</div>' if materials else ""
 
     # Only generate metadata block if it's the first card
     if is_continuation:
@@ -246,7 +245,9 @@ def build_card_html(spell: dict, card_title: str | None = None) -> str:
     flush_sentences()
 
     if higher_level and not any("__HIGHER__" in line for line in raw_lines):
-        paragraphs.append(f'<p class="higher-levels"><strong>{html.escape(higher_label)}</strong> {html.escape(str(higher_level))}</p>')
+        paragraphs.append(
+            f'<p class="higher-levels"><strong>{html.escape(higher_label)}</strong> {html.escape(str(higher_level))}</p>'
+        )
 
     desc_html = "".join(paragraphs)
 
@@ -282,74 +283,14 @@ def build_card_html(spell: dict, card_title: str | None = None) -> str:
     """
 
 
-def render_preview_document(cards_html: str, css_path: Path) -> str:
-    css_content = css_path.read_text(encoding="utf-8") if css_path.exists() else ""
-    return f"""<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>{css_content}</style>
-</head>
-<body>
-    <div class="sheet">{cards_html}</div>
-</body>
-</html>"""
-
-
-CHECK_OVERFLOW_JS = """
-() => {
-    const body = document.querySelector('.card-body');
-    if (!body) return false;
-    return (body.scrollHeight - body.clientHeight) > 8.0;
-}
-"""
-
-
-def can_pack_into_k_cards(units: list[str], k: int, spell: dict, page, css_path: Path) -> list[dict] | None:
-    """Attempts to distribute text units across at most k cards. 
-    Returns the list of subcards if successful, or None if it cannot fit."""
+def make_spell_candidate(spell: dict, units: list[str], card_num: int, total_cards: int) -> dict:
     base_name = spell.get("name", "")
-    subcards: list[dict] = []
-    unit_idx = 0
-    total_units = len(units)
-
-    for card_num in range(1, k + 1):
-        current_units: list[str] = []
-        mock_title = f"{base_name} ({card_num}/{k})" if k > 1 else base_name
-
-        while unit_idx < total_units:
-            candidate_unit = units[unit_idx]
-            test_units = current_units + [candidate_unit]
-
-            candidate_spell = dict(spell)
-            candidate_spell["description"] = "\n".join(test_units)
-            candidate_spell["higher_level"] = ""
-            candidate_spell["display_title"] = mock_title
-
-            test_html = render_preview_document(build_card_html(candidate_spell), css_path)
-            page.set_content(test_html, wait_until="load")
-
-            if page.evaluate(CHECK_OVERFLOW_JS):
-                # Candidate unit does not fit on this card
-                break
-            else:
-                current_units.append(candidate_unit)
-                unit_idx += 1
-
-        if not current_units:
-            # Not even a single unit could fit
-            return None
-
-        part_spell = dict(spell)
-        part_spell["description"] = "\n".join(current_units)
-        part_spell["higher_level"] = ""
-        part_spell["display_title"] = mock_title
-        subcards.append(part_spell)
-
-        if unit_idx >= total_units:
-            return subcards
-
-    return None if unit_idx < total_units else subcards
+    title = f"{base_name} ({card_num}/{total_cards})" if total_cards > 1 else base_name
+    candidate = dict(spell)
+    candidate["description"] = "\n".join(units)
+    candidate["higher_level"] = ""
+    candidate["display_title"] = title
+    return candidate
 
 
 def split_overflowing_spells(spells: list[dict], css_filename: str) -> list[dict]:
@@ -382,7 +323,9 @@ def split_overflowing_spells(spells: list[dict], css_filename: str) -> list[dict
             # Try to pack into minimal number of cards: 2, then 3, etc.
             packed_cards = None
             for target_k in range(2, 6):
-                packed_cards = can_pack_into_k_cards(units, target_k, spell, page, css_path)
+                packed_cards = can_pack_into_k_cards(
+                    spell, units, target_k, page, css_path, make_spell_candidate, build_card_html
+                )
                 if packed_cards is not None:
                     break
 
@@ -396,13 +339,8 @@ def split_overflowing_spells(spells: list[dict], css_filename: str) -> list[dict
     return processed_cards
 
 
-def generate_html(spells: list[dict], css_filename: str = "styles.css", printable: bool = False) -> str:
-    pages = []
-    for i in range(0, len(spells), 9):
-        batch = spells[i : i + 9]
-        cards = "\n".join(build_card_html(s, card_title=s.get("display_title")) for s in batch)
-        pages.append(f'<div class="sheet">\n{cards}\n</div>')
-
+def generate_html(spells: list[dict], css_filename: str = "styles/spell_card.css", printable: bool = False) -> str:
+    pages = paginate_cards(spells, lambda s: build_card_html(s, card_title=s.get("display_title")))
     pages_html = "\n".join(pages)
     printable_class = " printable" if printable else ""
 
@@ -420,29 +358,12 @@ def generate_html(spells: list[dict], css_filename: str = "styles.css", printabl
 """
 
 
-def export_pdf(html_path: str, pdf_path: str):
-    from playwright.sync_api import sync_playwright
-
-    abs_html = Path(html_path).resolve().as_uri()
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page()
-        page.goto(abs_html, wait_until="networkidle")
-        page.pdf(
-            path=pdf_path,
-            format="A4",
-            print_background=True,
-            margin={"top": "0mm", "bottom": "0mm", "left": "0mm", "right": "0mm"},
-        )
-        browser.close()
-
-
 def main():
     parser = argparse.ArgumentParser(description="Generar cartas de conjuros DnD.")
     parser.add_argument("input", help="Ruta al archivo JSON de entrada")
     parser.add_argument("-o", "--output", default="spells.html", help="Ruta del archivo HTML generado")
     parser.add_argument("-d", "--outdir", default="output", help="Directorio donde se guardarán los resultados")
-    parser.add_argument("--css", default="styles.css", help="Ruta o nombre del archivo CSS externo")
+    parser.add_argument("--css", default="styles/spell_card.css", help="Ruta o nombre del archivo CSS externo")
     parser.add_argument("--pdf", nargs="?", const="", help="Exportar directamente a PDF")
     parser.add_argument("-p", "--printable", action="store_true", help="Modo sin fondo para imprimir")
 
@@ -452,7 +373,7 @@ def main():
     output_path = (outdir_path / args.output).resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(args.input, "r", encoding="utf-8") as f:
+    with open(args.input, encoding="utf-8") as f:
         spells = json.load(f)
 
     # Automatically split spells whose text exceeds the card dimensions
@@ -472,13 +393,9 @@ def main():
     print(f"HTML generado -> {output_path} (usando {rel_css_path})")
 
     if args.pdf is not None:
-        if args.pdf:
-            pdf_path = (outdir_path / args.pdf).resolve()
-        else:
-            pdf_path = output_path.with_suffix(".pdf")
-        
+        pdf_path = (outdir_path / args.pdf).resolve() if args.pdf else output_path.with_suffix(".pdf")
         pdf_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         print(f"Renderizando PDF -> {pdf_path}...")
         export_pdf(output_path, pdf_path)
         print("¡Completado!")

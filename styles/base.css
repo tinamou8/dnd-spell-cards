@@ -1,0 +1,51 @@
+@page {
+    size: A4 portrait;
+    margin: 6mm;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #555;
+    font-family: "Georgia", "Times New Roman", serif;
+    color: #1a1a1a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* 3x3 Card Grid for A4 sheets */
+.sheet {
+    display: grid;
+    grid-template-columns: repeat(3, 63.5mm);
+    grid-template-rows: repeat(3, 88mm);
+    gap: 1.5mm;
+    justify-content: center;
+    align-content: center;
+    width: 210mm;
+    min-height: 297mm;
+    margin: auto;
+    padding: 6mm 0;
+    background: #fff;
+    page-break-after: always;
+    break-after: page;
+}
+
+@media print {
+    body {
+        background: none;
+    }
+    .sheet {
+        margin: 0;
+        padding: 0;
+        width: auto;
+        min-height: auto;
+    }
+    .card-source {
+        color: #000000;
+        opacity: 1;
+    }
+}

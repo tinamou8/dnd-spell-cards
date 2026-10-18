@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "Spell.schema.json",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "level",
+    "casting_time",
+    "range_area",
+    "components",
+    "duration"
+  ],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "higher_level": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["Cantrip", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    },
+    "casting_time": {
+      "type": "string"
+    },
+    "range_area": {
+      "type": "string"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["V", "S", "M", "F", "DF", "XP"]
+      }
+    },
+    "material": {
+      "type": "string"
+    },
+    "ritual": {
+      "type": "boolean",
+      "default": false
+    },
+    "concentration": {
+      "type": "boolean",
+      "default": false
+    },
+    "duration": {
+      "type": "string"
+    },
+    "school": {
+      "type": "string"
+    },
+    "attack_save": {
+      "type": "string"
+    },
+    "damage_effect": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    },
+    "icon": {
+      "type": "string",
+      "description": "Optional image URL or relative path for the card header icon."
+    }
+  },
+  "additionalProperties": true
+}

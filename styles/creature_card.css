@@ -1,0 +1,296 @@
+@import "base.css";
+
+/* Card Outer Shell & Parchment Texture */
+.card {
+    width: 63.5mm;
+    height: 88mm;
+    background-color: #f6eedb;
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.45) 0%, rgba(205, 185, 145, 0.25) 100%),
+        linear-gradient(#fbf6ea, #ecd9be);
+    border: 1px solid #3d2b1f;
+    border-radius: 4.5mm;
+    padding: 2.2mm;
+    overflow: hidden;
+    position: relative;
+    color: #1a1510;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid rgba(80, 50, 20, 0.35);
+    border-radius: 2.5mm;
+    padding: 1.8mm 2mm 1.4mm 2mm;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Header: Name, Subtitle, CR Badge */
+.creature-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    border-bottom: 1.2px solid #5a1e12;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+}
+
+.header-left {
+    min-width: 0;
+}
+
+.creature-title {
+    font-family: "Cinzel", "Georgia", "Palatino", serif;
+    font-size: 8.8pt;
+    font-weight: 900;
+    letter-spacing: 0.1px;
+    text-transform: uppercase;
+    color: #3b0e07;
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.creature-subtitle {
+    font-family: "Georgia", serif;
+    font-style: italic;
+    font-size: 5pt;
+    color: #4a3828;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* CR Badge */
+.cr-badge {
+    background-color: #5a1e12;
+    color: #ffffff;
+    border-radius: 2px;
+    padding: 1px 3.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    text-align: center;
+}
+
+.cr-label {
+    font-size: 3.5pt;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.cr-value {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 6.5pt;
+    font-weight: 900;
+    line-height: 1;
+}
+
+/* Vitals Strip (AC, HP, Speed, Initiative) */
+.vitals-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(90, 30, 18, 0.08);
+    border: 0.5px solid #8c7355;
+    border-radius: 1.5mm;
+    padding: 1.5px 2px;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.vital-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1px 0;
+}
+
+.vital-box:not(:last-child) {
+    border-right: 0.5px solid rgba(140, 115, 85, 0.4);
+}
+
+.vital-label {
+    font-size: 4.2pt;
+    font-weight: 800;
+    letter-spacing: 0.1px;
+    color: #5a1e12;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.vital-value {
+    font-size: 5.6pt;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+/* Ability Scores 6-Col Grid */
+.ability-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: rgba(0, 0, 0, 0.04);
+    border: 0.5px solid #8c7355;
+    border-radius: 1.5mm;
+    padding: 1px 0;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.ability-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1px 0;
+}
+
+.ability-name {
+    font-size: 4pt;
+    font-weight: 800;
+    color: #3b0e07;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.ability-mod {
+    font-size: 5.8pt;
+    font-weight: 800;
+    color: #111;
+    line-height: 1.1;
+}
+
+.ability-score {
+    font-size: 4pt;
+    color: #4a3d31;
+    line-height: 1;
+}
+
+/* Saving Throws, Senses & Languages Section */
+.attributes-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8px;
+    padding-bottom: 1.5px;
+    margin-bottom: 1.5px;
+    border-bottom: 0.5px solid #8c7355;
+}
+
+.attr-line {
+    font-size: 5.2pt;
+    line-height: 1.15;
+    color: #1a1510;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attr-label {
+    font-weight: 800;
+    color: #4a180e;
+    text-transform: uppercase;
+    font-size: 4.3pt;
+}
+
+/* Scroll-free Action & Traits Body */
+.creature-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5px;
+    font-size: 5.2pt;
+    line-height: 1.2;
+}
+
+.section-title {
+    font-family: "Cinzel", "Georgia", serif;
+    font-size: 5.5pt;
+    font-weight: 800;
+    letter-spacing: 0.1px;
+    color: #5a1e12;
+    border-bottom: 0.2px solid rgba(90, 30, 18, 0.25);
+    text-transform: uppercase;
+    margin-top: 1px;
+    padding-bottom: 0.5px;
+}
+
+.entry-item {
+    margin: 0;
+    text-align: left;
+}
+
+.entry-name {
+    font-weight: 800;
+    font-style: italic;
+    color: #2c0b05;
+}
+
+/* Attack detail line */
+.attack-line {
+    font-style: italic;
+    color: #3d3126;
+}
+
+/* Continuation Card Header & Footer */
+.creature-header.header-continuation {
+    display: flex;
+    justify-content: space-between;
+    min-height: 16px;
+    padding-bottom: 1.5px;
+    margin-bottom: 1.5px;
+}
+
+.header-continuation .creature-title {
+    font-size: 7.5pt;
+}
+
+/* Printable Mode (Ink-saver) */
+body.printable .card {
+    background: #ffffff !important;
+    border: 1px solid #111111;
+}
+
+body.printable .card-inner {
+    background: #ffffff !important;
+    border: 0.5px solid #222222;
+}
+
+body.printable .creature-title,
+body.printable .section-title,
+body.printable .vital-label,
+body.printable .ability-name,
+body.printable .attr-label,
+body.printable .entry-name {
+    color: #000000;
+}
+
+body.printable .creature-header {
+    border-color: #111111;
+}
+
+body.printable .cr-badge {
+    background-color: #ffffff;
+    color: #000000;
+    border: 0.8px solid #000000;
+}
+
+body.printable .vitals-strip,
+body.printable .ability-grid {
+    background: #ffffff;
+    border-color: #333333;
+}
+
+body.printable .vital-box:not(:last-child) {
+    border-right-color: #666666;
+}
