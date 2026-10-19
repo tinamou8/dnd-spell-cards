@@ -7,7 +7,8 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 from core.exporter import export_pdf
-from core.paginator import CHECK_OVERFLOW_JS, can_pack_into_k_cards, paginate_cards, render_preview_document
+from core.paginator import CHECK_OVERFLOW_JS, can_pack_into_k_cards, paginate_cards, render_preview_document, \
+    load_preview
 
 CLASS_ABBREVIATIONS: dict[str, str] = {
     "bárbaro": "BÁR",
@@ -306,7 +307,7 @@ def split_overflowing_spells(spells: list[dict], css_filename: str) -> list[dict
 
         for spell in spells:
             test_html = render_preview_document(build_card_html(spell), css_path)
-            page.set_content(test_html, wait_until="load")
+            load_preview(page, test_html)
 
             # Fits on a single regular card
             if not page.evaluate(CHECK_OVERFLOW_JS):

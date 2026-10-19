@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import argparse
 import html
 import json
@@ -12,7 +11,7 @@ from core.paginator import (
     CHECK_OVERFLOW_JS,
     can_pack_into_k_cards,
     paginate_cards,
-    render_preview_document,
+    render_preview_document, load_preview,
 )
 
 STAT_LABELS: dict[str, str] = {
@@ -22,6 +21,27 @@ STAT_LABELS: dict[str, str] = {
     "int": "INT",
     "wis": "SAB",
     "cha": "CAR",
+}
+
+SKILL_LABELS: dict[str, str] = {
+    "acrobatics": "Acrobacias",
+    "animal_handling": "Trato con animales",
+    "arcana": "Conocimiento arcano",
+    "athletics": "Atletismo",
+    "deception": "Engaño",
+    "history": "Historia",
+    "insight": "Perspicacia",
+    "intimidation": "Intimidación",
+    "investigation": "Investigación",
+    "medicine": "Medicina",
+    "nature": "Naturaleza",
+    "perception": "Percepción",
+    "performance": "Interpretación",
+    "persuasion": "Persuasión",
+    "religion": "Religión",
+    "sleight_of_hand": "Juego de manos",
+    "stealth": "Sigilo",
+    "survival": "Supervivencia",
 }
 
 
@@ -63,10 +83,33 @@ def format_senses(senses: dict) -> str:
         dist = senses.get(sense)
         if dist:
             parts.append(f"{label} {dist} m")
-    pp = senses.get("passive_perception")
-    if pp is not None:
-        parts.append(f"Percepción pasiva {pp}")
     return ", ".join(parts)
+
+
+def format_defense_attributes(creature: dict) -> list[str]:
+    """Format damage/condition vulnerabilities, resistances, and immunities."""
+    attributes = []
+    for field_key, label in (
+        ("damage_vulnerabilities", "Vulnerabilidades"),
+        ("damage_resistances", "Resistencias"),
+    ):
+        items = creature.get(field_key)
+        if items:
+            attributes.append((label, ", ".join(items)))
+
+    dmg_imm = creature.get("damage_immunities") or []
+    cond_imm = creature.get("condition_immunities") or []
+
+    immunity_parts = []
+    if dmg_imm:
+        immunity_parts.append(", ".join(dmg_imm))
+    if cond_imm:
+        immunity_parts.append(", ".join(cond_imm))
+
+    if immunity_parts:
+        attributes.append(("Inmunidades", "; ".join(immunity_parts)))
+
+    return attributes
 
 
 def format_saving_throws(saves: dict) -> str:
@@ -79,11 +122,33 @@ def format_saving_throws(saves: dict) -> str:
     return ", ".join(parts)
 
 
+def format_skills(skills: dict[str, int] | None) -> str:
+    """Format skills map into a localized string."""
+    if not skills:
+        return ""
+    parts = [f"{SKILL_LABELS.get(key, key)} {format_mod(val)}" for key, val in skills.items()]
+    return ", ".join(parts)
+
+
 def format_action_html(action: dict) -> str:
     """Render an individual action, attack, or trait to HTML."""
     name = html.escape(str(action.get("name", "")))
     attack = action.get("attack")
-    effect = action.get("effect", "")
+    raw_effect = str(action.get("effect", ""))
+
+    # Format save throws
+    effect_html = html.escape(raw_effect)
+    if effect_html:
+        effect_html = re.sub(
+            r"(Tirada de salvaci[oó]n de [A-Za-zÁÉÍÓÚáéíóú]+:)",
+            r"<em>\1</em>",
+            effect_html,
+        )
+        effect_html = re.sub(
+            r"\b(Fallo o [eé]xito|[ÉE]xito|Fallo):",
+            r"<em>\1:</em>",
+            effect_html,
+        )
 
     if attack:
         raw_attack_type = str(attack.get("type", "Ataque con arma"))
@@ -98,11 +163,22 @@ def format_action_html(action: dict) -> str:
         atk_details = f"<em>{attack_type}:</em> {bonus}, {reach_str}. <em>Acierto:</em> {hit}."
         if extra:
             atk_details += f" {extra}"
-        if effect:
-            atk_details += f" {html.escape(effect)}"
+        if effect_html:
+            atk_details += f" {effect_html}"
         return f'<p class="entry-item"><span class="entry-name">{name}.</span> {atk_details}</p>'
 
-    return f'<p class="entry-item"><span class="entry-name">{name}.</span> {html.escape(str(effect))}</p>'
+    return f'<p class="entry-item"><span class="entry-name">{name}.</span> {effect_html}</p>'
+
+
+def format_legendary_header(legendary: dict) -> str:
+    """Format the Legendary Actions section title with dynamic counts."""
+    uses = legendary.get("uses")
+    lair = legendary.get("lair_uses")
+    count_str = f"{uses} ({lair} en la guarida)" if lair is not None else str(uses)
+    return (
+        '<div class="section-title">Acciones Legendarias</div>'
+        f'<div class="section-subtitle">Usos: {html.escape(count_str)}</div>'
+    )
 
 
 def extract_creature_units(creature: dict) -> list[str]:
@@ -116,9 +192,9 @@ def extract_creature_units(creature: dict) -> list[str]:
 
     actions = creature.get("actions", [])
     if actions:
-        units.append('<div class="section-title">Acciones</div>')
-        for a in actions:
-            units.append(format_action_html(a))
+        action_items = [format_action_html(a) for a in actions]
+        action_items[0] = '<div class="section-title">Acciones</div>' + action_items[0]
+        units.extend(action_items)
 
     bonus_actions = creature.get("bonus_actions", [])
     if bonus_actions:
@@ -132,7 +208,31 @@ def extract_creature_units(creature: dict) -> list[str]:
         for r in reactions:
             units.append(format_action_html(r))
 
+    legendary = creature.get("legendary_actions")
+    if isinstance(legendary, dict) and legendary.get("actions"):
+        legendary_items = [format_action_html(la) for la in legendary["actions"]]
+        legendary_items[0] = format_legendary_header(legendary) + legendary_items[0]
+        units.extend(legendary_items)
+
     return units
+
+
+def _render_stat_row(stat_key: str, score: int, save_val: int, is_top: bool = False) -> str:
+    """Render an individual stat row."""
+    mod = format_mod(calc_modifier(score))
+    save_str = format_mod(save_val)
+    label = STAT_LABELS[stat_key]
+    row_class = "stat-row stat-row-top" if is_top else "stat-row"
+    return f"""
+        <div class="{row_class}">
+            <span class="stat-name-group">
+                <span class="stat-name">{label}</span>
+                <span class="stat-score">{score}</span>
+            </span>
+            <span class="stat-mod">{mod}</span>
+            <span class="stat-save">{save_str}</span>
+        </div>
+    """
 
 
 def build_creature_card_html(creature: dict, card_title: str | None = None, content_html: str | None = None) -> str:
@@ -178,43 +278,63 @@ def build_creature_card_html(creature: dict, card_title: str | None = None, cont
 
         ac = creature.get("armor_class", "")
         hp = html.escape(str(creature.get("hit_points", "")))
-        speed = html.escape(format_speed(creature.get("speed", {})))
         initiative = html.escape(str(creature.get("initiative", "")))
 
         vitals_html = f"""
         <div class="vitals-strip">
             <div class="vital-box"><span class="vital-label">CA</span><span class="vital-value">{ac}</span></div>
             <div class="vital-box"><span class="vital-label">PG</span><span class="vital-value">{hp}</span></div>
-            <div class="vital-box"><span class="vital-label">VEL</span><span class="vital-value">{speed}</span></div>
             <div class="vital-box"><span class="vital-label">INIC</span><span class="vital-value">{initiative}</span></div>
         </div>
         """
 
         scores = creature.get("ability_scores", {})
+        saves = creature.get("saving_throws", {})
+
+        pairs = [
+            ("str", "int"),
+            ("dex", "wis"),
+            ("con", "cha"),
+        ]
+
         ability_cols = []
-        for stat in ("str", "dex", "con", "int", "wis", "cha"):
-            score = scores.get(stat, 10)
-            mod = format_mod(calc_modifier(score))
-            ability_cols.append(
-                f'<div class="ability-col">'
-                f'<span class="ability-name">{STAT_LABELS[stat]}</span>'
-                f'<span class="ability-mod">{mod}</span>'
-                f'<span class="ability-score">{score}</span>'
-                f"</div>"
-            )
+        for top_stat, btm_stat in pairs:
+            top_score = scores.get(top_stat, 10)
+            top_save = saves.get(top_stat, calc_modifier(top_score))
+            btm_score = scores.get(btm_stat, 10)
+            btm_save = saves.get(btm_stat, calc_modifier(btm_score))
+            col_html = f"""
+            <div class="stat-pair-col">
+                <div class="stat-header">
+                    <span></span>
+                    <span>M.</span>
+                    <span>S.</span>
+                </div>
+                {_render_stat_row(top_stat, top_score, top_save, is_top=True)}
+                {_render_stat_row(btm_stat, btm_score, btm_save, is_top=False)}
+            </div>
+            """
+            ability_cols.append(col_html)
         ability_grid_html = f'<div class="ability-grid">{"".join(ability_cols)}</div>'
 
         attr_lines = []
-        saves = format_saving_throws(creature.get("saving_throws", {}))
-        if saves:
+
+        speed = html.escape(format_speed(creature.get("speed", {})))
+        if speed:
             attr_lines.append(
-                f'<div class="attr-line"><span class="attr-label">Salvaciones:</span> {html.escape(saves)}</div>'
+                f'<div class="attr-line"><span class="attr-label">Velocidad:</span> {html.escape(speed)}</div>'
             )
 
         skills = creature.get("skills")
         if skills:
+            fmt_skills = format_skills(skills)
             attr_lines.append(
-                f'<div class="attr-line"><span class="attr-label">Habilidades:</span> {html.escape(skills)}</div>'
+                f'<div class="attr-line"><span class="attr-label">Habilidades:</span> {html.escape(fmt_skills)}</div>'
+            )
+
+        for label, text in format_defense_attributes(creature):
+            attr_lines.append(
+                f'<div class="attr-line"><span class="attr-label">{label}:</span> {html.escape(text)}</div>'
             )
 
         senses = format_senses(creature.get("senses", {}))
@@ -245,7 +365,7 @@ def build_creature_card_html(creature: dict, card_title: str | None = None, cont
         <div class="card-inner">
             {header_html}
             {top_stats_html}
-            <div class="creature-body card-body">
+            <div class="card-body">
                 {body_content}
             </div>
         </div>
@@ -277,13 +397,14 @@ def split_overflowing_creatures(creatures: list[dict], css_filename: str) -> lis
         browser = p.chromium.launch()
         context = browser.new_context(device_scale_factor=2)
         page = context.new_page()
+        # page.on("console", lambda msg: print("BROWSER:", msg.text))
         page.emulate_media(media="print")
 
         processed_cards: list[dict] = []
 
         for creature in creatures:
             test_html = render_preview_document(build_creature_card_html(creature), css_path)
-            page.set_content(test_html, wait_until="load")
+            load_preview(page, test_html)
 
             # Fits cleanly on 1 card
             if not page.evaluate(CHECK_OVERFLOW_JS):
@@ -308,6 +429,8 @@ def split_overflowing_creatures(creatures: list[dict], css_filename: str) -> lis
             if packed_cards:
                 processed_cards.extend(packed_cards)
             else:
+                creature_name = creature.get("name", "<no name>")
+                print(f"WARNING: not possible to paginate without overflow: {creature_name}")
                 processed_cards.append(creature)
 
         browser.close()

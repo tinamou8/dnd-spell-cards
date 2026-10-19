@@ -31,4 +31,9 @@ select = [
     "UP",  # pyupgrade
     "SIM", # flake8-simplify
 ]
-ignore = ["E501"]
+ignore = [
+    "B027",
+    "E501",
+    "SIM401",
+    "W191"
+]

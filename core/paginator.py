@@ -1,5 +1,6 @@
 """Card pagination and sheet packing utilities."""
 
+import tempfile
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -8,11 +9,36 @@ from playwright.sync_api import Page
 
 CHECK_OVERFLOW_JS = """
 () => {
-    const body = document.querySelector('.card-body');
-    if (!body) return false;
-    return (body.scrollHeight - body.clientHeight) > 8.0;
+    const tolerance = 1.0;
+    for (const body of document.querySelectorAll('.card-body')) {
+        if (body.scrollHeight - body.clientHeight > tolerance) return true;
+
+        const last = body.lastElementChild;
+        if (last && last.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom > tolerance) {
+            return true;
+        }
+    }
+    return false;
 }
 """
+
+STYLES_LOADED_JS = """
+() => {
+    const card = document.querySelector('.card');
+    if (!card) return true;
+    return getComputedStyle(card).overflow === 'hidden';
+}
+"""
+
+_PREVIEW_FILE = Path(tempfile.gettempdir()) / "dnd_cards_preview.html"
+
+
+def load_preview(page: Page, html_doc: str) -> None:
+    """Load a preview from a real file:// URL so local stylesheets are allowed to load."""
+    _PREVIEW_FILE.write_text(html_doc, encoding="utf-8")
+    page.goto(_PREVIEW_FILE.as_uri(), wait_until="load")
+    if not page.evaluate(STYLES_LOADED_JS):
+        raise RuntimeError("Preview CSS was not applied; overflow detection would be unreliable.")
 
 
 def paginate_cards(
@@ -33,12 +59,12 @@ def paginate_cards(
 
 
 def render_preview_document(cards_html: str, css_path: Path) -> str:
-    css_content = css_path.read_text(encoding="utf-8") if css_path.exists() else ""
+    css_uri = css_path.resolve().as_uri()
     return f"""<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <style>{css_content}</style>
+    <link rel="stylesheet" href="{css_uri}">
 </head>
 <body>
     <div class="sheet">{cards_html}</div>
@@ -70,7 +96,7 @@ def can_pack_into_k_cards(
             test_units = current_units + [candidate_unit]
             test_item = build_candidate_fn(item, test_units, card_num, k)
             test_html = render_preview_document(render_card_fn(test_item), css_path)
-            page.set_content(test_html, wait_until="load")
+            load_preview(page, test_html)
 
             if page.evaluate(overflow_js):
                 # Candidate unit does not fit on this card

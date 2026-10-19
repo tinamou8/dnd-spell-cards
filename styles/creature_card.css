@@ -25,6 +25,7 @@
     border-radius: 2.5mm;
     padding: 1.8mm 2mm 1.4mm 2mm;
     background: rgba(255, 255, 255, 0.3);
+    overflow: hidden;
 }
 
 /* Header: Name, Subtitle, CR Badge */
@@ -43,15 +44,15 @@
 
 .creature-title {
     font-family: "Cinzel", "Georgia", "Palatino", serif;
-    font-size: 8.8pt;
+    font-size: 8pt;
     font-weight: 900;
     letter-spacing: 0.1px;
     text-transform: uppercase;
     color: #3b0e07;
     line-height: 1.05;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
 }
 
 .creature-subtitle {
@@ -69,40 +70,44 @@
 .cr-badge {
     background-color: #5a1e12;
     color: #ffffff;
-    border-radius: 2px;
-    padding: 1px 3.5px;
+    border-radius: 3px;
+    padding: 2.5px 4px 3px 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 22px;
+    min-width: 24px;
+    min-height: 22px;
+    box-sizing: border-box;
     text-align: center;
 }
 
 .cr-label {
-    font-size: 3.5pt;
+    font-size: 3.8pt;
     font-weight: 800;
     line-height: 1;
     text-transform: uppercase;
-    opacity: 0.85;
+    opacity: 0.9;
+    letter-spacing: 0.2px;
+    margin-bottom: 1px;
 }
 
 .cr-value {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 6.5pt;
+    font-size: 7.5pt;
     font-weight: 900;
     line-height: 1;
 }
 
-/* Vitals Strip (AC, HP, Speed, Initiative) */
+/* Vitals Strip (AC, HP, Initiative) */
 .vitals-strip {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 2.1fr 1.1fr;
     background: rgba(90, 30, 18, 0.08);
-    border: 0.5px solid #8c7355;
-    border-radius: 1.5mm;
-    padding: 1.5px 2px;
-    margin-bottom: 2px;
+    border: 1.4px solid #8c7355;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    padding: 2.5px 0;
     text-align: center;
 }
 
@@ -110,69 +115,100 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1px 0;
+    justify-content: center;
+    padding: 0 2px;
 }
 
 .vital-box:not(:last-child) {
-    border-right: 0.5px solid rgba(140, 115, 85, 0.4);
+    border-right: 1.2px solid #99785d;
 }
 
 .vital-label {
-    font-size: 4.2pt;
+    font-size: 5pt;
     font-weight: 800;
-    letter-spacing: 0.1px;
-    color: #5a1e12;
-    text-transform: uppercase;
+    color: #4a2d18;
     line-height: 1;
 }
 
 .vital-value {
-    font-size: 5.6pt;
+    font-size: 6.4pt;
     font-weight: 700;
-    color: #111;
-    line-height: 1.15;
+    color: #1a1510;
     white-space: nowrap;
+    line-height: 1.1;
+    margin-top: 1px;
 }
 
-/* Ability Scores 6-Col Grid */
+/* Ability Scores Pair 3-Col Grid */
 .ability-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1px;
+    grid-template-columns: repeat(3, 1fr);
     background: rgba(0, 0, 0, 0.04);
-    border: 0.5px solid #8c7355;
-    border-radius: 1.5mm;
-    padding: 1px 0;
-    margin-bottom: 2px;
+    border: 1.4px solid #8c7355;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    padding: 1.5px 1px 2px 1px;
+    box-sizing: border-box;
+}
+
+.stat-pair-col:not(:last-child) {
+    border-right: 1px solid #b39780;
+}
+
+.stat-pair-col {
+    padding: 0 3px;
+}
+
+.stat-header {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr 1fr;
+    font-size: 4.4pt;
+    font-weight: 800;
+    color: #4a6b82;
     text-align: center;
+    line-height: 1;
+    padding-bottom: 1.5px;
 }
 
-.ability-col {
-    display: flex;
-    flex-direction: column;
+.stat-row {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr 1fr;
     align-items: center;
-    padding: 1px 0;
+    line-height: 1.2;
+    padding: 0.5px 0;
 }
 
-.ability-name {
-    font-size: 4pt;
+.stat-row-top {
+    border-bottom: 0.6px solid rgba(115, 81, 53, 0.2);
+    margin-bottom: 1px;
+}
+
+.stat-name-group {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    padding-left: 1px;
+}
+
+.stat-name {
     font-weight: 800;
-    color: #3b0e07;
-    text-transform: uppercase;
+    color: #4a150e;
+    font-size: 5.2pt;
+    letter-spacing: 0.2px;
+}
+
+.stat-score {
+    font-size: 4.6pt;
+    font-weight: 600;
+    color: #665241;
     line-height: 1;
 }
 
-.ability-mod {
-    font-size: 5.8pt;
-    font-weight: 800;
-    color: #111;
-    line-height: 1.1;
-}
-
-.ability-score {
-    font-size: 4pt;
-    color: #4a3d31;
-    line-height: 1;
+.stat-mod, .stat-save {
+    text-align: center;
+    font-weight: 700;
+    color: #1a1510;
+    font-size: 5.4pt;
 }
 
 /* Saving Throws, Senses & Languages Section */
@@ -180,52 +216,66 @@
     display: flex;
     flex-direction: column;
     gap: 0.8px;
-    padding-bottom: 1.5px;
-    margin-bottom: 1.5px;
-    border-bottom: 0.5px solid #8c7355;
+    padding-bottom: 2px;
+    margin-bottom: 2.5px;
+    border-bottom: 0.6px solid #8c7355;
 }
 
 .attr-line {
-    font-size: 5.2pt;
-    line-height: 1.15;
+    white-space: normal;
+    word-break: break-word;
+    font-size: 5.3pt;
+    line-height: 1.2;
+    margin-bottom: 0.5px;
     color: #1a1510;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .attr-label {
     font-weight: 800;
-    color: #4a180e;
+    color: #5c1813;
     text-transform: uppercase;
-    font-size: 4.3pt;
+    font-size: 5pt;
+    letter-spacing: 0.1px;
 }
 
 /* Scroll-free Action & Traits Body */
-.creature-body {
+.card-body {
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 1.5px;
-    font-size: 5.2pt;
-    line-height: 1.2;
+    gap: 2px;
+    font-size: 5.5pt;
+    line-height: 1.22;
 }
 
 .section-title {
+    flex: 0 0 auto;
     font-family: "Cinzel", "Georgia", serif;
-    font-size: 5.5pt;
+    font-size: 5.8pt;
     font-weight: 800;
     letter-spacing: 0.1px;
     color: #5a1e12;
-    border-bottom: 0.2px solid rgba(90, 30, 18, 0.25);
+    border-bottom: 0.4px solid rgba(90, 30, 18, 0.25);
     text-transform: uppercase;
-    margin-top: 1px;
+    margin-top: 1.5px;
     padding-bottom: 0.5px;
+    break-after: avoid;
+    page-break-after: avoid;
+}
+
+.section-subtitle {
+    flex: 0 0 auto;
+    font-family: "Georgia", serif;
+    font-style: italic;
+    font-size: 5pt;
+    color: #4a3828;
+    line-height: 1.1;
 }
 
 .entry-item {
+    flex: 0 0 auto;
     margin: 0;
     text-align: left;
 }
